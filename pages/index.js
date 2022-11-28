@@ -22,6 +22,7 @@ const Home = () => {
             className="prompt-box"
             value={userInput}
             onChange={onUserChangedText}
+            onClick={null}
            />;
           <textarea placeholder="start typing here" className="prompt-box" />
         </div>
