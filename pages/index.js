@@ -21,7 +21,6 @@ const Home = () => {
           <textarea placeholder="start typing here" className="prompt-box" />
         </div>
       </div>
-      </div>
       <div className="badge-container grow">
         <a
           href="https://buildspace.so/builds/ai-writer"
