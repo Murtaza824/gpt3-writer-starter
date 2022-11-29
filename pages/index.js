@@ -1,10 +1,39 @@
-import Head from 'next/head';
-import Image from 'next/image';
-import buildspaceLogo from '../assets/buildspace-logo.png';
-import { useState } from 'react';
+import Head from "next/head";
+import Image from "next/image";
+import buildspaceLogo from "../assets/buildspace-logo.png";
+import { useState } from "react";
 
 const Home = () => {
-  const [userInput, setUserInput] = useState('');
+  const [userInput, setUserInput] = useState("");
+  const onUserChangedText = (event) => {
+    console.log(event.target.value);
+    setUserInput(event.target.value);
+  };
+
+  const [apiOutput, setApiOutput] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const callGenerateEndpoint = async () => {
+    setIsGenerating(true);
+
+    console.log("Calling OpenAI...");
+    console.log(userInput);
+    const response = await fetch("/api/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userInput }),
+    });
+
+    const data = await response.json();
+    const { output } = data;
+    console.log("OpenAI replied...", output.text);
+
+    setApiOutput(`${output.text}`);
+    setIsGenerating(false);
+  };
+
   return (
     <div className="root">
       <div className="container">
@@ -18,15 +47,11 @@ const Home = () => {
         </div>
         <div className="prompt-container">
           <textarea
-            placeholder="start typing here"
+            placeholder="Write or paste your essay here :)"
             className="prompt-box"
             value={userInput}
             onChange={onUserChangedText}
-            onClick={null}
-           />;
-          <textarea placeholder="start typing here" className="prompt-box" />
-        </div>
-      </div>
+          />
         {apiOutput && (<div className="output">
           <div className="output-header-container">
             <div className="output-header">
@@ -36,26 +61,17 @@ const Home = () => {
           <div className="output-content">
             <p>{apiOutput}</p>
           </div>
-      </div>
-   )}
-   </div>
-  );
-};
-        
-      <div className="badge-container grow">
-        <a
-          href="https://buildspace.so/builds/ai-writer"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <div className="badge">
-            <Image src={buildspaceLogo} alt="buildspace logo" />
-            <p>build with buildspace</p>
+        </div>
+          <div className="prompt-buttons">
+            <a className="generate-button" onClick={callGenerateEndpoint}>
+              <div className="generate">
+                <p>Generate</p>
+              </div>
+            </a>
           </div>
-        </a>
-      </div>
-    </div>
-  );
-};
+        </div>
+       
+  </div>
+)}
 
 export default Home;
